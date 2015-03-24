@@ -34,8 +34,9 @@ def after_request(response):
 
 if __name__ == '__main__':  #Run the App
     models.initialize() # initiallize the initialize method which will create the tables from models.py
+    #create users
     models.User.create_users(
-        name = 'Devndra',
+        name = 'myth',
         email= 'horrormyth@gmail.com',
         password = 'password',
         admin = True
