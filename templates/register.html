@@ -4,7 +4,7 @@
 {#allows you to hiddent tag from the code == it
 creates a div that has a style attribute of hidden, and it will put the hidden tags inside the code #}
 {% for field in form %}
-{# this part is connected from macro #}
+{# this part is connected from macro macros.html #}
     {{ render_field(field) }}
 {% endfor %}
 <button type="submit" id="submit">Register</button>
