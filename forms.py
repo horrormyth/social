@@ -16,7 +16,7 @@ def email_exists(form, field):  # check if the email exists
 
 
 class RegistrationForm(Form):
-    username = StringField('Username', validators=[
+    username = StringField('Username', validators=[  #Username is the placeholder/Label for the form
         DataRequired(),
         Regexp(r'^[a-zA-Z0-9_]+$', message='User should be one word with letters numbers and underscore only'),
         name_exists])

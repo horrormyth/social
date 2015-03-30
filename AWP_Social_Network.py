@@ -1,6 +1,8 @@
-from flask import Flask,g
+from flask import (Flask,g,render_template,flash,redirect,url_for)
 from flask.ext.login import LoginManager
+
 import models
+import forms
 
 DEBUG =True
 PORT =8000
@@ -32,13 +34,33 @@ def after_request(response):
     g.db.close()
     return response
 
+@app.route('/register',methods=('GET','POST'))
+def register():
+    form = forms.RegistrationForm() #instance of registrationForm class
+    if form.validate_on_submit(): #if validated and sumbitted
+        flash('Registration Succesful','success') #second part is the message category (Creating)
+        models.User.create_users(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data
+        )
+        return redirect(url_for('index'))
+    return render_template('register.html',form=form)
+
+@app.route('/')
+def index():
+    return 'Hello Social'
+
 if __name__ == '__main__':  #Run the App
     models.initialize() # initiallize the initialize method which will create the tables from models.py
     #create users
-    models.User.create_users(
-        name = 'myth',
-        email= 'horrormyth@gmail.com',
-        password = 'password',
-        admin = True
-    )
+    try:
+        models.User.create_users(
+            username= 'myth',
+            email= 'horrormyth@gmail.com',
+            password = 'password',
+            admin = True
+        )
+    except ValueError:
+        pass
     app.run(debug=DEBUG,host=HOST,port=PORT)
