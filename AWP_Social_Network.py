@@ -110,12 +110,12 @@ if __name__ == '__main__':  #Run the App
     models.initialize() # initiallize the initialize method which will create the tables from models.py
     #create users
     try:
-        models.User.create_users(
+         models.User.create_users(
             username= 'myth',
             email= 'horrormyth@gmail.com',
             password = 'password',
             admin = True
-        )
+            )
     except ValueError:
         pass
     app.run(debug=DEBUG,host=HOST,port=PORT)
