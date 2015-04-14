@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField,TextAreaField
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
                                 Length, EqualTo)
 from models import User
@@ -21,5 +21,12 @@ class RegistrationForm(Form):
         Regexp(r'^[a-zA-Z0-9_]+$', message='User should be one word with letters numbers and underscore only'),
         name_exists])
     email = StringField('Email', validators=[DataRequired(), Email(), email_exists])
-    pasword = PasswordField('Password', validators=[DataRequired(),Length(min=6),EqualTo('password2',message='Passwords must be matched')])
+    password = PasswordField('Password', validators=[DataRequired(),Length(min=6),EqualTo('password2',message='Passwords must be matched')])
     password2=PasswordField('Confirm Password',validators=[DataRequired()])
+
+class LoginForm(Form):
+    email = StringField('Email',validators=[DataRequired(),Email()])
+    password = PasswordField('Password',validators=[DataRequired()])
+
+class PostForm(Form):
+    content = TextAreaField('Whats on your mind',validators=[DataRequired()])

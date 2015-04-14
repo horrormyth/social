@@ -1,5 +1,6 @@
 from flask import (Flask,g,render_template,flash,redirect,url_for)
-from flask.ext.login import LoginManager
+from flask.ext.bcrypt import check_password_hash
+from flask.ext.login import LoginManager,login_user,logout_user,login_required,current_user
 
 import models
 import forms
@@ -27,6 +28,7 @@ def before_request():
     # Database Connection before every reqeust
     g.db = models.DATABASE
     g.db.connect()
+    g.user = current_user
 
 @app.after_request
 def after_request(response):
@@ -46,6 +48,43 @@ def register():
         )
         return redirect(url_for('index'))
     return render_template('register.html',form=form)
+
+@app.route('/login',methods=('GET','POST')) #login view
+def login():
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        try:
+            user = models.User.get(models.User.email == form.email.data)
+        except models.DoesNotExist:
+            flash('Your email or Password doesnt match','error')
+        else:
+            if check_password_hash(user.password,form.password.data):
+                login_user(user) #creating sessions on users browser and giving the cookie
+                flash('You are logged in','success')
+                return redirect(url_for('index'))
+            else:
+                flash('Your email or Password doesnt match','error')
+    return render_template('login.html',form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user() #delets the cookie (user cookie)
+    flash('You are Logged Out','success')
+    return redirect(url_for('index'))
+
+@app.route('/new_post',methods=('GET','POST'))
+@login_required
+def post():
+    form = forms.PostForm()
+    if form.validate_on_submit():
+        models.Post.create(user=g.user._get_current_object(),
+                           content = form.content.data.strip())
+        flash('Message Posted','success')
+        return redirect(url_for('index'))
+    return render_template('post.html',form=form)
+
 
 @app.route('/')
 def index():
