@@ -15,6 +15,26 @@ class User (UserMixin, Model):
     joined_at = DateTimeField(default=datetime.datetime.now)
     is_admin = BooleanField(default=False)
 
+    def following(self):
+        #Users that we are following
+        return (
+            User.select().join(    # to select from multiple tables
+                Relationship,on=Relationship.to_user  #(Select i am related to all the users)
+            ).where( #where relationship where is me
+                Relationship.from_user == self
+            )
+
+        )
+    def followers(self):
+        #Get users follwing the current user
+        return (
+            User.select().join(
+                Relationship, on=Relationship.from_user
+            ).where(
+                Relationship.to_user == self
+            )
+        )
+
     class Meta:
         database = DATABASE
         order_by =('-joined_at',) #DESCENDING DISPLAY OF THE USERS
@@ -22,6 +42,7 @@ class User (UserMixin, Model):
         return Post.select().where(Post.user == self)
     def get_stream(self):
         return Post.select().where(
+            (Post.user << self.following()) |#find all the post that i follow
             (Post.user == self)
         )
 
@@ -49,7 +70,18 @@ class Post(Model):
         database = DATABASE
         order_by = ('-timestamp',)#touples
 
+class Relationship(Model):
+    from_user = ForeignKeyField(User,related_name='relationships')
+    to_user = ForeignKeyField(User,related_name='related_to')
+
+    class Meta:
+        database =DATABASE
+        indexes = (
+            (('from_user','to_user'),True) #touples , true for unique index
+        )
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User,Post],safe=True)
+    DATABASE.create_tables([User,Post,Relationship],safe=True)
     DATABASE.close()
