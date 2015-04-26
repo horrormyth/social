@@ -96,8 +96,11 @@ def index():
 def stream(username=None):
     template = 'stream.html'
     if username and username != current_user.username:
-        user = models.User.select().where(models.User.username**username).get()
-        stream = user.posts.limit(100)
+        try:
+         user = models.User.select().where(models.User.username**username).get()
+        except models.DoesNotExist:
+            abort(404)  #404 IF NOT EXIST THROW 404 ERROR
+            stream = user.posts.limit(100)
     else:
         stream = current_user.get_stream().limit(100)
         user = current_user
@@ -108,6 +111,8 @@ def stream(username=None):
 @app.route('/post/<int:post_id>')
 def view_post(post_id):
     posts = models.Post.select().where(models.Post.id == post_id) #select all the post from that user i follow
+    if posts.count() == 0:
+        abort(404) #if post is not in range throw 404
     return render_template('stream.html',stream=posts)
 
 @app.route('/follow/<username>')
@@ -116,7 +121,7 @@ def follow(username):
     try:
         to_user = models.User.get(models.User.username ** username)
     except models.DoesNotExist:
-        pass
+        abort(404)  #if user doesnt exists throw 404 error
     else:
         try:models.Relationship.create(
             from_user =g.user._get_current_object(),
@@ -145,6 +150,10 @@ def unfollow(username):
         else:
             flash('You have unfollowed {}!'.format(to_user.username),'success')
     return redirect(url_for('stream', username=to_user.username))
+
+@app.errorhandler(404)  #404 Decorator
+def not_found(error):
+    return render_template('404.html')
 
 if __name__ == '__main__':  #Run the App
     models.initialize() # initiallize the initialize method which will create the tables from models.py
