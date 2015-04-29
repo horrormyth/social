@@ -97,15 +97,17 @@ def stream(username=None):
     template = 'stream.html'
     if username and username != current_user.username:
         try:
-         user = models.User.select().where(models.User.username**username).get()
+            user = models.User.select().where(models.User.username**username).get()
         except models.DoesNotExist:
             abort(404)  #404 IF NOT EXIST THROW 404 ERROR
+        else:
             stream = user.posts.limit(100)
     else:
         stream = current_user.get_stream().limit(100)
         user = current_user
     if username:
         template ='user_stream.html'
+
     return render_template(template,stream=stream,user=user)
 
 @app.route('/post/<int:post_id>')
