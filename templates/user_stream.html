@@ -22,7 +22,7 @@
         <div class="grid-25">
         {# Follow/Unfollow     button   #}
 
-        {% if current_user.is_authenticated() %} {#        {%  %}#}
+        {% if current_user.is_authenticated %} {#        {%  %}#}
             {% if user != current_user %}  {#    if its not current user    {%  %}#}
                 {% if not user in current_user.following() %}   {#   if the user is not already been followed by logged in user
                       {%  %}#}

@@ -222,7 +222,7 @@ button.small {
 }
 .view {
     font-size: 0.8em;
-    text-transform: upper;
+    text-transform: uppercase;
 }
 
 /*Notifications*/
@@ -295,17 +295,20 @@ footer p {
   .main {
     margin: 10px auto;
   }
+
   .grid-25 {
     width: 46%;
     margin: 20px 2%;
   }
+
   .grid-50 {
     width: 100%;
   }
+
   .row {
     padding: 0 10px;
+  }
 }
-
 .post {
     white-space: pre;
 }
