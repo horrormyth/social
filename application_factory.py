@@ -12,7 +12,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     _load_config(app, config_name)
     _setup_logging(app)
-    _init_db(app)
+    # _init_db(app)
     login_manager = LoginManager()
     login_manager.login_view = 'social.login'
     login_manager.init_app(app)
@@ -41,9 +41,8 @@ def _load_config(app, config_name):
 def _init_db(app):
     db_name = app.config['DB_NAME']
     sql_db = SqliteDatabase(db_name)
-    sql_db.connect()
-    sql_db.create_tables([models.User, models.Post, models.Relationship], safe=True)
-    sql_db.close()
+    with sql_db.database:
+        sql_db.database.create_tables([models.User, models.Post, models.Relationship], safe=True)
     return sql_db
 
 

@@ -18,8 +18,8 @@ def before_request():
     g.user = current_user
 
 
-@app.after_request
-def after_request(response):
+@app.teardown_request
+def teardown_request(response):
     g.db.close()
     return response
 
