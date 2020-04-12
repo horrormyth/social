@@ -8,7 +8,7 @@ from peewee import SqliteDatabase, DoesNotExist
 import models
 
 
-def create_app(config_name: str) -> Flask:
+def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     _load_config(app, config_name)
     _setup_logging(app)
@@ -34,7 +34,7 @@ def _register_blue_print(app):
     app.register_blueprint(social_blueprint)
 
 
-def _load_config(app: Flask, config_name: str) -> None:
+def _load_config(app, config_name):
     app.config.from_object(config_name)
 
 
@@ -54,7 +54,7 @@ class RequestFormatter(logging.Formatter):
         return super(RequestFormatter, self).format(record)
 
 
-def _setup_logging(app) -> None:
+def _setup_logging(app):
     log_line = '[%(asctime)s]-%(remote_addr)s requested %(url)s %(levelname)s ' \
                'in %(module)s: at line %(lineno)d - %(message)s'
     formatter = RequestFormatter(log_line)
