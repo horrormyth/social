@@ -26,9 +26,9 @@
             {% if user != current_user %}  {#    if its not current user    {%  %}#}
                 {% if not user in current_user.following() %}   {#   if the user is not already been followed by logged in user
                       {%  %}#}
-                      <a href="{{ url_for('follow', username=user.username) }}" class="small">Follow</a>
+                      <a href="{{ url_for('social.follow', username=user.username) }}" class="small">Follow</a>
                 {% else %}
-                    <a href="{{ url_for('unfollow', username=user.username) }}" class="small">Unfollow</a>
+                    <a href="{{ url_for('social.unfollow', username=user.username) }}" class="small">Unfollow</a>
                 {% endif %}
             {% endif %}
         {% endif %}
