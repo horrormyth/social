@@ -70,7 +70,7 @@
             <a href="{{ url_for('social.index') }}">Go Home!</a>
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('social.stream',username=current_user.username) }}">Following</a>
-                <a href="{{ url_for('post') }}" class="new">Create New Post</a>
+                <a href="{{ url_for('social.post') }}" class="new">Create New Post</a>
             {% endif %}
 
         </nav>
