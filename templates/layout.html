@@ -40,7 +40,7 @@
 
             <!-- Log in/Log out -->
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('logout') }}" class="icon-power" title="Log Out"> </a>
+                <a href="{{ url_for('social.logout') }}" class="icon-power" title="Log Out"> </a>
             {% else %}
                 <a href="{{ url_for('social.login') }}" class="icon-power" title="Log In"></a>
                 <a href="{{ url_for('social.register') }}" class="icon-profile" title="Register"></a>
